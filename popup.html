@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TabCleaner</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <h1>Duplicate Tabs Found</h1>
+        <button id="scanButton" class="secondary">Scan</button>
+      </header>
+
+      <section class="actions">
+        <button id="closeAllButton" class="primary">Close all duplicates</button>
+      </section>
+
+      <p id="feedback" class="feedback" aria-live="polite"></p>
+
+      <section>
+        <ul id="groupsList" class="groups"></ul>
+      </section>
+
+      <footer class="footer">
+        <small>Settings coming soon</small>
+      </footer>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
