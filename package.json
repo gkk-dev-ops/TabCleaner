@@ -1,0 +1,12 @@
+{
+  "name": "tabcleaner",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "lint:js": "node --check background.js && node --check popup.js",
+    "lint:manifest": "python -m json.tool manifest.json > /dev/null",
+    "check": "npm run lint:js && npm run lint:manifest",
+    "verify:tag": "node scripts/verify-tag-version.js",
+    "build:zip": "bash scripts/build-extension.sh"
+  }
+}
