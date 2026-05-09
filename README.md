@@ -10,8 +10,8 @@ Sometimes I'm using chrome browser, but I soooo match can't use it with the Oper
 3. Enable **Developer mode**.
 4. Find **TabCleaner** and click the **service worker** link to open its console.
 5. Click **Reload** on the extension.
-6. Right-click the **browser tab header** (not the page content area).
-7. Expected tab context menu:
+6. Right-click the **TabCleaner extension action icon** in the Chrome toolbar.
+7. Expected context menu:
    - `TabCleaner > Preview duplicate tabs`
    - `TabCleaner > Close duplicate tabs`
 8. Check the service worker console for logs prefixed with `[TabCleaner]`.

@@ -1,6 +1,7 @@
 const DEBUG = true;
 const DEBUG_VERBOSE = false;
 const LOG_PREFIX = '[TabCleaner]';
+const MENU_CONTEXTS = ['action'];
 const serviceWorkerLoadedAt = new Date().toISOString();
 
 const diagnostics = {
@@ -189,21 +190,43 @@ async function createContextMenus() {
   const parent = await createContextMenuItem({
     id: 'tabcleaner-parent',
     title: 'TabCleaner',
-    contexts: ['tab']
+    contexts: MENU_CONTEXTS
   });
 
   const preview = await createContextMenuItem({
     id: 'tabcleaner-preview-duplicates',
     parentId: 'tabcleaner-parent',
     title: 'Preview duplicate tabs',
-    contexts: ['tab']
+    contexts: MENU_CONTEXTS
   });
 
   const close = await createContextMenuItem({
     id: 'tabcleaner-close-duplicates',
     parentId: 'tabcleaner-parent',
     title: 'Close duplicate tabs',
-    contexts: ['tab']
+    contexts: MENU_CONTEXTS
+  });
+
+  diagnostics.lastContextMenuSetupStatus = 'ok';
+  debugLog('Context menu creation complete.', { ids: [parent, preview, close] });
+}
+
+function createContextMenuItem(item) {
+  return new Promise((resolve, reject) => {
+    debugLog('Creating context menu item.', { id: item.id, title: item.title, parentId: item.parentId || null });
+    chrome.contextMenus.create(item, () => {
+      const lastError = chrome.runtime.lastError;
+      if (lastError) {
+        const error = new Error(`Context menu "${item.id}" failed: ${lastError.message}`);
+        diagnostics.lastContextMenuSetupStatus = 'error';
+        diagnostics.lastContextMenuError = error.message;
+        debugError('Context menu creation failed.', { id: item.id, error: lastError.message });
+        reject(error);
+        return;
+      }
+      debugLog('Context menu item created.', { id: item.id });
+      resolve(item.id);
+    });
   });
 
   diagnostics.lastContextMenuSetupStatus = 'ok';
