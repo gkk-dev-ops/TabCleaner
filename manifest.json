@@ -3,7 +3,10 @@
   "name": "TabCleaner",
   "description": "Find and safely close duplicate tabs.",
   "version": "1.0.0",
-  "permissions": ["tabs"],
+  "permissions": [
+    "tabs",
+    "contextMenus"
+  ],
   "action": {
     "default_title": "TabCleaner",
     "default_popup": "popup.html"
