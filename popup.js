@@ -2,10 +2,17 @@ const groupsList = document.getElementById('groupsList');
 const closeAllButton = document.getElementById('closeAllButton');
 const scanButton = document.getElementById('scanButton');
 const feedback = document.getElementById('feedback');
+const diagnostics = document.getElementById('diagnostics');
+const diagnosticsButton = document.getElementById('diagnosticsButton');
 
 function setFeedback(message, isError = false) {
   feedback.textContent = message;
   feedback.classList.toggle('error', isError);
+}
+
+function setDiagnostics(message, isError = false) {
+  diagnostics.textContent = message;
+  diagnostics.classList.toggle('error', isError);
 }
 
 function sendMessage(message) {
@@ -110,6 +117,24 @@ async function scan() {
   }
 }
 
+async function loadDiagnostics() {
+  try {
+    const response = await sendMessage({ type: 'GET_DIAGNOSTICS' });
+    const state = response.diagnostics;
+    setDiagnostics(
+      [
+        `SW loaded: ${state.serviceWorkerLoadedAt}`,
+        `Menus: ${state.lastContextMenuSetupStatus}`,
+        `Menu error: ${state.lastContextMenuError || 'none'}`,
+        `Badge: ${state.lastBadgeUpdateStatus}`,
+        `Duplicate groups: ${state.currentDuplicateGroupCount}`
+      ].join(' | ')
+    );
+  } catch (error) {
+    setDiagnostics(`Diagnostics unavailable: ${error.message}`, true);
+  }
+}
+
 closeAllButton.addEventListener('click', async () => {
   try {
     const response = await sendMessage({ type: 'CLOSE_DUPLICATES' });
@@ -121,5 +146,7 @@ closeAllButton.addEventListener('click', async () => {
 });
 
 scanButton.addEventListener('click', scan);
+diagnosticsButton.addEventListener('click', loadDiagnostics);
 
 scan();
+loadDiagnostics();
