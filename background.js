@@ -228,6 +228,28 @@ function createContextMenuItem(item) {
       resolve(item.id);
     });
   });
+
+  diagnostics.lastContextMenuSetupStatus = 'ok';
+  debugLog('Context menu creation complete.', { ids: [parent, preview, close] });
+}
+
+function createContextMenuItem(item) {
+  return new Promise((resolve, reject) => {
+    debugLog('Creating context menu item.', { id: item.id, title: item.title, parentId: item.parentId || null });
+    chrome.contextMenus.create(item, () => {
+      const lastError = chrome.runtime.lastError;
+      if (lastError) {
+        const error = new Error(`Context menu "${item.id}" failed: ${lastError.message}`);
+        diagnostics.lastContextMenuSetupStatus = 'error';
+        diagnostics.lastContextMenuError = error.message;
+        debugError('Context menu creation failed.', { id: item.id, error: lastError.message });
+        reject(error);
+        return;
+      }
+      debugLog('Context menu item created.', { id: item.id });
+      resolve(item.id);
+    });
+  });
 }
 
 chrome.runtime.onInstalled.addListener(() => {
