@@ -1,0 +1,35 @@
+name: Release Extension
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate extension files
+        run: npm run check
+
+      - name: Verify tag version matches manifest
+        run: npm run verify:tag
+
+      - name: Build extension zip
+        run: npm run build:zip
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/tabcleaner.zip
+          generate_release_notes: true

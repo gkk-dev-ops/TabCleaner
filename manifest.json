@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "TabCleaner",
+  "description": "Find and safely close duplicate tabs.",
+  "version": "1.0.0",
+  "permissions": [
+    "tabs",
+    "contextMenus"
+  ],
+  "action": {
+    "default_title": "TabCleaner",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}
